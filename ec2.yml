@@ -4,7 +4,7 @@
   gather_facts: False
 
   vars:
-   region: us-east-1d
+   region: us-east-1
    instance_type: t2.micro
    ami: ami-0922553b7b0369273
    keypair: ansible
@@ -13,7 +13,7 @@
   - name: EC2 Instance Configuration
     ec2:
      key_name: "{{ keypair }}"
-     group: sg-06127e73e534bf9e0
+     group: Ansible_Tower
      instance_type: "{{ instance_type }}"
      image: "{{ ami }}"
      wait: true
