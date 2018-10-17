@@ -1,0 +1,24 @@
+---
+- name: Creating new EC2 Instances
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+   region: us-east-1d
+   instance_type: t2.micro
+   ami: ami-0922553b7b0369273
+   keypair: ansible
+
+  tasks:
+  - name: EC2 Instance Configuration
+    ec2:
+     key_name: "{{ keypair }}"
+     group: sg-06127e73e534bf9e0
+     instance_type: "{{ instance_type }}"
+     image: "{{ ami }}"
+     wait: true
+     region: "{{ region }}"
+     count: 1
+     vpc_subnet_id: subnet-6e9a4319
+     assign_public_ip: no
+    register: ec2
