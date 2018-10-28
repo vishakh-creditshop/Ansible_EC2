@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Creating new EC2 instance
+    ec2:
+     key_name: "2494"
+     instance_type: "t2.micro"
+     image: "ami-0922553b7b0369273"
+     wait: true
+     count: 1
+     region: "us-east-1"
+     group_id: sg-01e9f4ac83507631c                                  
