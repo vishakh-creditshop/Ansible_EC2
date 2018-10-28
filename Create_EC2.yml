@@ -6,10 +6,13 @@
   tasks:
   - name: Creating new EC2 instance
     ec2:
-     key_name: "2494"
+     key_name: "ansible"
      instance_type: "t2.micro"
      image: "ami-0922553b7b0369273"
      wait: true
      count: 1
      region: "us-east-1"
-     group_id: sg-01e9f4ac83507631c                                  
+     group_id: sg-06127e73e534bf9e0
+     vpc_subnet_id: subnet-6e9a4319
+     assign_public_ip: no
+    register: ec2
