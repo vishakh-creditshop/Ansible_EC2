@@ -19,7 +19,7 @@
                 #!/bin/bash
                 TOWER=tower-test.local
                 JOB=14
-                KEY=b6e9d2d3e89757515c7ab1f1ef643d33
+                KEY=677268f66d49c4a70c95c9f60406588d
 
                 retry_attempts=10
                 attempt=0
