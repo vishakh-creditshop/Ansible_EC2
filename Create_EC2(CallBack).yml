@@ -11,21 +11,20 @@
      image: "ami-0922553b7b0369273"
      wait: true
      count: 1
+     instance_tags:
+      Ansible: Test_Linux
      region: "us-east-1"
      group_id: sg-06127e73e534bf9e0
      vpc_subnet_id: subnet-6e9a4319
      assign_public_ip: no
      user_data: |
                 #!/bin/bash
-                TOWER=tower-test.local
-                JOB=14
-                KEY=677268f66d49c4a70c95c9f60406588d
-
+                
                 retry_attempts=10
                 attempt=0
                 while [[ $attempt -lt $retry_attempts ]]
                 do
-                    status_code='curl --data "host_config_key=5a8ec154832b780b9bdef1061764ae5a" https://10.1.41.148:443/api/v2/job_templates/14/callback/ | head -n 1 | awk '{print $2}''
+                    status_code='curl -k --data "host_config_key=677268f66d49c4a70c95c9f60406588d" https://10.1.41.148:443/api/v2/job_templates/14/callback/ | head -n 1 | awk '{print $2}''
                     if [[ $status_code == 202 ]]
                         then
                         exit 0
