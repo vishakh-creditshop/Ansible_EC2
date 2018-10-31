@@ -24,14 +24,17 @@
                 attempt=0
                 while [[ $attempt -lt $retry_attempts ]]
                 do
-                    status_code='curl -k --data "host_config_key=677268f66d49c4a70c95c9f60406588d" https://10.1.41.148:443/api/v2/job_templates/14/callback/ | head -n 1 | awk '{print $2}''
-                    if [[ $status_code == 202 ]]
+                    curl -k --data "host_config_key=677268f66d49c4a70c95c9f60406588d" https://10.1.41.148:443/api/v2/job_templates/14/callback/
+                    rpm -q tree
+                    status_code=$(echo $?)
+                    
+                    if [[ $status_code == 0 ]]
                         then
                         exit 0
                     fi
                     attempt=$(( attempt + 1 ))
                     echo "${status_code} received... retrying in 1 minute. (Attempt ${attempt})"
-                    sleep 60
+                    sleep 60s
                  done
                  exit 1
     register: ec2                                                      
