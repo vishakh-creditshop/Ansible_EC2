@@ -1,0 +1,20 @@
+---
+- name: create auto-scaling group
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: create autoscaling group
+    ec2_asg: 
+      name: Ansible-ASG
+      region: us-east-1
+      load_balancers: Ansible-ELB
+      availability_zones: us-east-1d
+      launch_config_name: Ansible_Launch_Config
+      min_size: 2
+      max_size: 4
+      desired_capacity: 2
+      replace_all_instances: yes
+      vpc_zone_identifier: subnet-6e9a4319
+      tags:
+        - type: Ansible_asg
+      wait_for_instances: yes
