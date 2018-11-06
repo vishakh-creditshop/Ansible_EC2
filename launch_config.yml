@@ -2,6 +2,7 @@
 - name: Create EC2 Launch Config
   hosts: localhost
   connection: local
+  gather_facts: false
 
   tasks:
   - name: EC2 Launch_Config Create
