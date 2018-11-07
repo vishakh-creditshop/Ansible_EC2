@@ -3,4 +3,16 @@
   hosts: localhost
   connection: local
   gather_facts: true
+  
+  tasks:
+   - name: testing green
+     command: "echo green >> /tmp/log"
+     when:
+      tags['class'] == "green"
+      
+      
+   - name: testing blue
+     command: "echo blue >> /tmp/log"
+     when:
+      tags['class'] == "blue"
 
