@@ -1,0 +1,58 @@
+---
+- name: Create EC2 Launch Config
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  tasks:
+   - name: gathering ec2 facts
+     ec2_instance_facts:
+      filters:
+        tag-key: class
+      region: us-east-1
+     register: ec2_facts
+
+
+   - name: Set instance version for blue
+     set_fact:
+      launch_version: blue
+      terminate_version: green
+     when:
+       ec2_facts.instances[0].tags.class == "green"      
+      
+   - name: Set instance version for green
+     set_fact:
+      launch_version: green
+      terminate_version: blue
+     when:
+       ec2_facts.instances[0].tags.class == "blue" 
+
+   - name: EC2 Launch_Config Create
+     ec2_lc:
+      name: Test_Webapp-{{ launch_version }}
+      image_id: ami-013be31976ca2c322
+      instance_type: t2.micro
+      key_name: ansible
+      
+      security_groups: ['Ansible_Tower']
+      region: us-east-1
+      user_data: |
+                #!/bin/bash
+                
+                retry_attempts=10
+                attempt=0
+                while [[ $attempt -lt $retry_attempts ]]
+                do
+                    curl -k --data "host_config_key=677268f66d49c4a70c95c9f60406588d" https://10.1.41.148:443/api/v2/job_templates/14/callback/
+                    rpm -q tree
+                    status_code=$(echo $?)
+                    
+                    if [[ $status_code == 0 ]]
+                        then
+                        exit 0
+                    fi
+                    attempt=$(( attempt + 1 ))
+                    echo "${status_code} received... retrying in 1 minute. (Attempt ${attempt})"
+                    sleep 60s
+                 done
+                 exit 1
