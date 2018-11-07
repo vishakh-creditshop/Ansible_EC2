@@ -5,12 +5,13 @@
   gather_facts: false
   
   tasks:
-   - name: testing the script
-     ec2_tag:
+   - name: gathering ec2 facts
+     ec2_instance_facts:
+      filters:
+        tag-key: class
       region: us-east-1
-      state: list
-      resource: i-0fdf0bc03e27ad40c
-     register: ec2_tag
+
+
    - name: test green instance
      command: "echo green >> /tmp/log"
      when:
