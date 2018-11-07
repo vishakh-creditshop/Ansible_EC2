@@ -2,16 +2,24 @@
 - name: Create EC2 Launch Config
   hosts: localhost
   connection: local
-  gather_facts: true
+  gather_facts: false
   
   tasks:
-   - name: testing green
+   - name: testing the script
+     ec2_tag:
+      region: us-east-1
+      tags: 
+       class: 
+      state: list
+      register: ec2_tag
+   - name: test green instance
      command: "echo green >> /tmp/log"
      when:
-      ec2_tags.tags.class == "green"
+       ec2_tags.tags.class == "green"
       
       
    - name: testing blue
      command: "echo blue >> /tmp/log"
      when:
-      ec2_tags.tags.class == "blue"
+       ec2_tags.tags.class == "blue"
+  
