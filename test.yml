@@ -4,8 +4,3 @@
   connection: local
   gather_facts: true
 
-  tasks:
-  - ec2_instance_facts:
-     region: us-east-1
-     filters:
-       tag-key: class
