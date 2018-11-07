@@ -14,12 +14,12 @@
 
 
    - name: test green instance
-     command: "echo green >> /tmp/log"
+     command: echo green >> /tmp/log
      when:
        ec2_facts.instances[0].tags.class == "green"      
       
    - name: testing blue
-     command: "echo blue >> /tmp/log"
+     command: echo blue >> /tmp/log
      when:
        ec2_facts.instances[0].tags.class == "blue"
   
