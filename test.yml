@@ -8,8 +8,6 @@
    - name: testing the script
      ec2_tag:
       region: us-east-1
-      tags: 
-       class: 
       state: list
       register: ec2_tag
    - name: test green instance
