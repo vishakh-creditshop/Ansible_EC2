@@ -8,11 +8,10 @@
    - name: testing green
      command: "echo green >> /tmp/log"
      when:
-      tags['class'] == "green"
+      ec2_tags.tags.class == "green"
       
       
    - name: testing blue
      command: "echo blue >> /tmp/log"
      when:
-      tags['class'] == "blue"
-
+      ec2_tags.tags.class == "blue"
