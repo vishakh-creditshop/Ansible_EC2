@@ -9,7 +9,7 @@
      ec2_tag:
       region: us-east-1
       state: list
-      resource: '{{ item.id }}'
+      resource: i-0fdf0bc03e27ad40c
      register: ec2_tag
    - name: test green instance
      command: "echo green >> /tmp/log"
