@@ -10,15 +10,16 @@
       filters:
         tag-key: class
       region: us-east-1
+     register: ec2_facts
 
 
    - name: test green instance
      command: "echo green >> /tmp/log"
      when:
-       instances.0.tags.class == "green"      
+       ec2_facts.instances[0].tags.class == "green"      
       
    - name: testing blue
      command: "echo blue >> /tmp/log"
      when:
-       instances.0.tags.class == "blue"
+       ec2_facts.instances[0].tags.class == "blue"
   
