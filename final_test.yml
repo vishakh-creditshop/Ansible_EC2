@@ -56,3 +56,26 @@
                     sleep 60s
                  done
                  exit 1
+
+   - name: Create ELB
+     ec2_elb_lb:
+      name: Ansible-ELB-{{ launch_version }}
+      scheme: internal
+      state: present
+      security_group_ids: sg-06127e73e534bf9e0
+      subnets: 'subnet-6e9a4319'
+      region: 'us-east-1'
+      tags:
+        class: "{{ launch_version }}"
+      health_check:
+          ping_protocol: http
+          ping_port: 80
+          ping_path: "/index.html"
+          response_timeout: 5
+          interval: 30
+          unhealthy_threshold: 2
+          healthy_threshold: 10
+      listeners:
+        - protocol: http
+          load_balancer_port: 80
+          instance_port: 80
