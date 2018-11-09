@@ -9,6 +9,7 @@
      ec2_instance_facts:
       filters:
         tag-key: class
+        instance-state-name: running
       region: us-east-1
      register: ec2_facts
 
@@ -76,9 +77,9 @@
           ping_port: 80
           ping_path: "/index.html"
           response_timeout: 5
-          interval: 30
+          interval: 10
           unhealthy_threshold: 2
-          healthy_threshold: 10
+          healthy_threshold: 2
       listeners:
         - protocol: http
           load_balancer_port: 80
