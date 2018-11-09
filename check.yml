@@ -35,5 +35,5 @@
       record: www.vishakh.ga
       type: CNAME
       ttl: 300
-      value: elb_facts.dns_name
+      value: elb_facts.elb.dns_name
       wait: yes
