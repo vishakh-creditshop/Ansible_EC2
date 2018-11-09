@@ -96,4 +96,5 @@
       tags:
         - type: Ansible_asg
         - class: "{{ launch_version }}"
+        - Name: Ansible_WebApp-{{ launch_version }}
       wait_for_instances: yes  
