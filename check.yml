@@ -37,3 +37,4 @@
       ttl: 300
       value: elb_facts.elb.dns_name
       wait: yes
+      overwrite: yes
