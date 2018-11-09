@@ -85,6 +85,10 @@
           instance_port: 80
      register: elb_facts
 
+   - debug:
+       var: elb_facts
+
+
    - name: create autoscaling group
      ec2_asg: 
       name: Ansible-ASG-{{ launch_version }}
@@ -102,3 +106,14 @@
         - class: "{{ launch_version }}"
         - Name: Ansible_WebApp-{{ launch_version }}
       wait_for_instances: yes  
+
+   - name: Binding ELB-Route53
+     route53:
+      state: present
+      zone: vishakh.ga
+      record: www.vishakh.ga
+      type: CNAME
+      ttl: 300
+      value: "{{ elb_facts.elb.dns_name }}"
+      wait: yes
+      overwrite: yes
