@@ -1,0 +1,39 @@
+---
+- name: Create EC2 Launch Config
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+   - name: Create ELB
+     ec2_elb_lb:
+      name: Ansible-ELB-test
+      scheme: internal
+      state: present
+      security_group_ids: sg-06127e73e534bf9e0
+      subnets: 'subnet-6e9a4319'
+      region: 'us-east-1'
+      health_check:
+          ping_protocol: http
+          ping_port: 80
+          ping_path: "/index.html"
+          response_timeout: 5
+          interval: 30
+          unhealthy_threshold: 2
+          healthy_threshold: 10
+      listeners:
+        - protocol: http
+          load_balancer_port: 80
+          instance_port: 80
+     register: elb_facts
+
+   - debug:
+       var: elb_facts
+  
+   - route53:
+      state: present
+      zone: vishakh.ga
+      record: www.vishakh.ga
+      type: CNAME
+      ttl: 300
+      value: elb_facts.dns_name
+      wait: yes
