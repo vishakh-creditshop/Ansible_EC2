@@ -79,3 +79,21 @@
         - protocol: http
           load_balancer_port: 80
           instance_port: 80
+     register: elb_facts
+
+   - name: create autoscaling group
+     ec2_asg: 
+      name: Ansible-ASG-{{ launch_version }}
+      region: us-east-1
+      load_balancers: Ansible-ELB-{{ launch_version }}
+      availability_zones: us-east-1d
+      launch_config_name: Test_Webapp-{{ launch_version }}
+      min_size: 2
+      max_size: 4
+      desired_capacity: 2
+      replace_all_instances: yes
+      vpc_zone_identifier: subnet-6e9a4319
+      tags:
+        - type: Ansible_asg
+        - class: "{{ launch_version }}"
+      wait_for_instances: yes  
