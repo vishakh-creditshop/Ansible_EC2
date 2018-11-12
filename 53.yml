@@ -14,7 +14,7 @@
 
   - name: parse and find value
     set_fact:
-     record_value: "{{ item.ResourceRecords.Value }}"
+     record_value: "{{ item.ResourceRecords[0].Value }}"
     when: item.Name == "www.vishakh.ga."
     with_items: "{{ dns_facts.ResourceRecordSets }}" 			
   - name: Dump route53_Facts
