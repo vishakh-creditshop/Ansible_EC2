@@ -118,12 +118,30 @@
       overwrite: yes
 
 
-   - name: Validation
+   - name: ELB Validation
      uri:
       url: "http://{{ elb_facts.elb.dns_name }}"
       return_content: yes
      register: this
      failed_when: "'Ansible test' not in this.content"
+
+
+   - name: Gather route53_Facts
+     route53_facts:
+      hosted_zone_id: Z2BJAMRIPXOA43
+      query: record_sets 
+      region: us-east-1 
+     register: dns_facts
+
+   - name: parse and find DNS record_value
+     set_fact:
+      record_value: "{{ item.ResourceRecords[0].Value }}"
+     when: item.Name == "www.vishakh.ga."
+     with_items: "{{ dns_facts.ResourceRecordSets }}"
+
+
+   - name: Route53_Validation
+     failed_when: "{{ record_value != elb_facts.elb.dns_name }}"
 
 
    - name: Deregister Older autoscaling group
