@@ -15,3 +15,17 @@
   - name: Dump ASG_Facts
     debug: 
      var: asg_facts
+
+  - name: Set instance version for blue
+    set_fact:
+      launch_version: blue
+      terminate_version: green
+    when:
+       asg_facts.instances[0].tags.class == "green"      
+      
+  - name: Set instance version for green
+    set_fact:
+     launch_version: green
+     terminate_version: blue
+    when:
+       asg_facts.instances[0].tags.class == "blue" 
