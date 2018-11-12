@@ -122,8 +122,14 @@
       region: us-east-1
       state: absent
 
-   - name: Destroy Older ELB
+   - name: Deregister Older ELB
      ec2_elb_lb:
       name: Ansible-ELB-{{ terminate_version }}
       state: absent
       region: 'us-east-1'
+
+   - name: Delete Older Launch_Config 
+     ec2_lc:
+      name: Test_Webapp-{{ terminate_version }}
+      region: us-east-1
+      state: absent
