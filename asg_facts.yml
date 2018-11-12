@@ -1,0 +1,16 @@
+---
+- name: Create EC2 Launch Config
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Gather ASG_Facts
+    ec2_asg_facts:
+     tags:
+      class: 
+    register: asg_facts
+     			
+  - name: Dump ASG_Facts
+    debug: 
+     var: asg_facts
