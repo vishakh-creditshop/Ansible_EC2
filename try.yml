@@ -141,7 +141,8 @@
 
 
    - name: Route53_Validation
-     failed_when: "{{ record_value != elb_facts.elb.dns_name }}"
+     fail: msg="Route53 Bind failed with ELB DNS_Name"
+     when: "{{ record_value != elb_facts.elb.dns_name }}"
 
 
    - name: Deregister Older autoscaling group
