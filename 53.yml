@@ -11,7 +11,13 @@
      query: record_sets 
      region: us-east-1 
     register: dns_facts
-     			
+
+  - name: parse and find value
+    set_fact:
+     record_value: "{{ item.ResourceRecords.Value }}"
+    when: item.name == "www.vishakh.ga"
+    with_items: "{{ dns_facts }}" 			
   - name: Dump route53_Facts
     debug: 
      var: dns_facts
+     var: record_value
