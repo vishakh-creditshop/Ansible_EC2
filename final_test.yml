@@ -8,7 +8,7 @@
    - name: gathering ec2 facts
      ec2_instance_facts:
       filters:
-        tag-key: class
+        tag-key: creditshop_ansible_version_Prod
         instance-state-name: running
       region: us-east-1
      register: ec2_facts
@@ -19,14 +19,14 @@
       launch_version: blue
       terminate_version: green
      when:
-       ec2_facts.instances[0].tags.class == "green"      
+       ec2_facts.instances[0].tags.creditshop_ansible_version_Prod == "green"      
       
    - name: Set instance version for green
      set_fact:
       launch_version: green
       terminate_version: blue
      when:
-       ec2_facts.instances[0].tags.class == "blue" 
+       ec2_facts.instances[0].tags.creditshop_ansible_version_Prod == "blue" 
 
    - name: EC2 Launch_Config Create
      ec2_lc:
@@ -44,10 +44,11 @@
                 # attempt=0
                 # while [[ $attempt -lt $retry_attempts ]]
                 # do
+                
                 #     curl -k --data "host_config_key=677268f66d49c4a70c95c9f60406588d" https://10.1.41.148:443/api/v2/job_templates/14/callback/
                 #     rpm -q tree
+
                 #     status_code=$(echo $?)
-                    
                 #     if [[ $status_code == 0 ]]
                 #         then
                 #         exit 0
@@ -71,7 +72,7 @@
       subnets: 'subnet-6e9a4319'
       region: 'us-east-1'
       tags:
-        class: "{{ launch_version }}"
+        creditshop_ansible_version_Prod: "{{ launch_version }}"
       health_check:
           ping_protocol: http
           ping_port: 80
@@ -101,7 +102,7 @@
       vpc_zone_identifier: subnet-6e9a4319
       tags:
         - type: Ansible_asg
-        - class: "{{ launch_version }}"
+        - creditshop_ansible_version_Prod: "{{ launch_version }}"
         - Name: Ansible_WebApp-{{ launch_version }}
       wait_for_instances: yes  
 
