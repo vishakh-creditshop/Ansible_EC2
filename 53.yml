@@ -1,0 +1,17 @@
+---
+- name: Gathering route53_Facts
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Gather route53_Facts
+    route53_facts:
+     hosted_zone_id: Z2BJAMRIPXOA43
+     query: record_sets 
+     region: us-east-1 
+    register: dns_facts
+     			
+  - name: Dump route53_Facts
+    debug: 
+     var: dns_facts
