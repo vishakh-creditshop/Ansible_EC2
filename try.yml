@@ -1,0 +1,141 @@
+---
+- name: Create EC2 Launch Config
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  tasks:
+   - name: gathering ec2 facts
+     ec2_instance_facts:
+      filters:
+        tag-key: "creditshop:ansible:version-Prod"
+        instance-state-name: running
+      region: us-east-1
+     register: ec2_facts
+
+
+   - name: Set instance version for blue
+     set_fact:
+      launch_version: blue
+      terminate_version: green
+     when:
+       ec2_facts.instances[0].tags."creditshop:ansible:version-Prod" == "green"      
+      
+   - name: Set instance version for green
+     set_fact:
+      launch_version: green
+      terminate_version: blue
+     when:
+       ec2_facts.instances[0].tags."creditshop:ansible:version-Prod" == "blue" 
+
+   - name: EC2 Launch_Config Create
+     ec2_lc:
+      name: Test_Webapp-{{ launch_version }}
+      image_id: ami-013be31976ca2c322
+      instance_type: t2.micro
+      key_name: ansible
+      
+      security_groups: ['Ansible_Tower']
+      region: us-east-1
+      user_data: |
+                #!/bin/bash
+                
+                # retry_attempts=10
+                # attempt=0
+                # while [[ $attempt -lt $retry_attempts ]]
+                # do
+                
+                #     curl -k --data "host_config_key=677268f66d49c4a70c95c9f60406588d" https://10.1.41.148:443/api/v2/job_templates/14/callback/
+                #     rpm -q tree
+
+                #     status_code=$(echo $?)
+                #     if [[ $status_code == 0 ]]
+                #         then
+                #         exit 0
+                #     fi
+                #     attempt=$(( attempt + 1 ))
+                #     echo "${status_code} received... retrying in 1 minute. (Attempt ${attempt})"
+                #     sleep 60s
+                #  done
+                #  exit 1
+
+                yum install -y httpd
+                echo Ansible test > /var/www/html/index.html
+                service httpd start
+
+   - name: Create ELB
+     ec2_elb_lb:
+      name: Ansible-ELB-{{ launch_version }}
+      scheme: internal
+      state: present
+      security_group_ids: sg-06127e73e534bf9e0
+      subnets: 'subnet-6e9a4319'
+      region: 'us-east-1'
+      tags:
+        "creditshop:ansible:version-Prod": "{{ launch_version }}"
+      health_check:
+          ping_protocol: http
+          ping_port: 80
+          ping_path: "/index.html"
+          response_timeout: 5
+          interval: 10
+          unhealthy_threshold: 2
+          healthy_threshold: 2
+      listeners:
+        - protocol: http
+          load_balancer_port: 80
+          instance_port: 80
+     register: elb_facts
+
+
+   - name: create autoscaling group
+     ec2_asg: 
+      name: Ansible-ASG-{{ launch_version }}
+      region: us-east-1
+      load_balancers: Ansible-ELB-{{ launch_version }}
+      availability_zones: us-east-1d
+      launch_config_name: Test_Webapp-{{ launch_version }}
+      min_size: 2
+      max_size: 4
+      desired_capacity: 2
+      replace_all_instances: yes
+      vpc_zone_identifier: subnet-6e9a4319
+      tags:
+        - type: Ansible_asg
+        - "creditshop:ansible:version-Prod": "{{ launch_version }}"
+        - Name: Ansible_WebApp-{{ launch_version }}
+      wait_for_instances: yes  
+
+   - name: Binding ELB-Route53
+     route53:
+      state: present
+      zone: vishakh.ga
+      record: www.vishakh.ga
+      type: CNAME
+      ttl: 300
+      value: "{{ elb_facts.elb.dns_name }}"
+      wait: yes
+      overwrite: yes
+
+   - name: Deregister Older autoscaling group
+     ec2_asg: 
+      name: Ansible-ASG-{{ terminate_version }}
+      region: us-east-1
+      state: absent
+
+   - name: Deregister Older ELB
+     ec2_elb_lb:
+      name: Ansible-ELB-{{ terminate_version }}
+      state: absent
+      region: 'us-east-1'
+
+   - name: Delete Older Launch_Config 
+     ec2_lc:
+      name: Test_Webapp-{{ terminate_version }}
+      region: us-east-1
+      state: absent
+
+
+
+
+
