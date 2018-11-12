@@ -8,7 +8,7 @@
    - name: gathering ec2 facts
      ec2_instance_facts:
       filters:
-        tag-key: "creditshop:ansible:version-Prod"
+        tag-key: creditshop\:ansible\:version-Prod
         instance-state-name: running
       region: us-east-1
      register: ec2_facts
@@ -19,14 +19,14 @@
       launch_version: blue
       terminate_version: green
      when:
-       ec2_facts.instances[0].tags."creditshop:ansible:version-Prod" == "green"      
+       ec2_facts.instances[0].tags.creditshop\:ansible\:version-Prod == "green"      
       
    - name: Set instance version for green
      set_fact:
       launch_version: green
       terminate_version: blue
      when:
-       ec2_facts.instances[0].tags."creditshop:ansible:version-Prod" == "blue" 
+       ec2_facts.instances[0].tags.creditshop\:ansible\:version-Prod == "blue" 
 
    - name: EC2 Launch_Config Create
      ec2_lc:
@@ -72,7 +72,7 @@
       subnets: 'subnet-6e9a4319'
       region: 'us-east-1'
       tags:
-        "creditshop:ansible:version-Prod": "{{ launch_version }}"
+        creditshop\:ansible\:version-Prod: "{{ launch_version }}"
       health_check:
           ping_protocol: http
           ping_port: 80
@@ -102,7 +102,7 @@
       vpc_zone_identifier: subnet-6e9a4319
       tags:
         - type: Ansible_asg
-        - "creditshop:ansible:version-Prod": "{{ launch_version }}"
+        - creditshop\:ansible\:version-Prod: "{{ launch_version }}"
         - Name: Ansible_WebApp-{{ launch_version }}
       wait_for_instances: yes  
 
@@ -134,8 +134,3 @@
       name: Test_Webapp-{{ terminate_version }}
       region: us-east-1
       state: absent
-
-
-
-
-
