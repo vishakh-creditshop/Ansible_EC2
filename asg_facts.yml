@@ -1,5 +1,5 @@
 ---
-- name: Create EC2 Launch Config
+- name: Gathering ASG_Facts
   hosts: localhost
   connection: local
   gather_facts: false
@@ -8,7 +8,7 @@
   - name: Gather ASG_Facts
     ec2_asg_facts:
      tags:
-      class:
+      class: "green | blue"
      region: us-east-1 
     register: asg_facts
      			
