@@ -8,7 +8,7 @@
   - name: Gather ASG_Facts
     ec2_asg_facts:
      tags:
-      class: green | blue
+      class: *
      region: us-east-1 
     register: asg_facts
      			
