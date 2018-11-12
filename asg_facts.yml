@@ -9,7 +9,7 @@
     ec2_asg_facts:
      tags:
       class:
-    region: us-east-1 
+     region: us-east-1 
     register: asg_facts
      			
   - name: Dump ASG_Facts
