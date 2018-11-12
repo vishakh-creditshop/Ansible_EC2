@@ -117,6 +117,9 @@
       wait: yes
       overwrite: yes
 
+   - name: Wait_Period 
+     pause: 
+      minutes: 1
 
    - name: ELB Validation
      uri:
