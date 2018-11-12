@@ -21,11 +21,11 @@
       launch_version: blue
       terminate_version: green
     when:
-       asg_facts.instances[0].tags.class == "green"      
+       asg_facts.results[0].tags.class == "green"      
       
   - name: Set instance version for green
     set_fact:
      launch_version: green
      terminate_version: blue
     when:
-       asg_facts.instances[0].tags.class == "blue" 
+       asg_facts.results[0].tags.class == "blue" 
