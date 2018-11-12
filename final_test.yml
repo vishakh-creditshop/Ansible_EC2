@@ -116,8 +116,14 @@
       wait: yes
       overwrite: yes
 
-   - name: Deregister older autoscaling group
+   - name: Deregister Older autoscaling group
      ec2_asg: 
       name: Ansible-ASG-{{ terminate_version }}
       region: us-east-1
       state: absent
+
+   - name: Destroy Older ELB
+     ec2_elb_lb:
+      name: Ansible-ELB-{{ terminate_version }}
+      state: absent
+      region: 'us-east-1'
