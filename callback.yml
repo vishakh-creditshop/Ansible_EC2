@@ -2,7 +2,6 @@
 - hosts: localhost
   connection: local
   gather_facts: false
-  become: yes
 
   tasks:
   - name: Creating new EC2 instance
