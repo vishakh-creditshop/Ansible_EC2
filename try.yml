@@ -60,7 +60,7 @@
                 #  exit 1
 
                 yum install -y httpd
-                echo Ansible test > /var/www/html/index.html
+                echo Ansible Network Connection Passed! > /var/www/html/index.html
                 service httpd start
 
    - name: Create ELB
