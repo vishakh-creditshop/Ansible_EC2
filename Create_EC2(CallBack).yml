@@ -20,10 +20,12 @@
      user_data: |
                 #!/bin/bash
                 
+                
                 retry_attempts=10
                 attempt=0
                 while [[ $attempt -lt $retry_attempts ]]
                 do
+                    
                     curl -k --data "host_config_key=677268f66d49c4a70c95c9f60406588d" https://10.1.41.148:443/api/v2/job_templates/14/callback/
                     rpm -q tree
                     status_code=$(echo $?)
