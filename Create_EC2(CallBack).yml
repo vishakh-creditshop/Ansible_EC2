@@ -20,7 +20,7 @@
      user_data: |
                 #!/bin/bash
                 
-                
+                curl --data "host_config_key=db950c4cb818a43c663003e7a89b4820" https://10.1.41.148:443/api/v2/job_templates/17/callback/
                 retry_attempts=10
                 attempt=0
                 while [[ $attempt -lt $retry_attempts ]]
