@@ -2,4 +2,4 @@
   tasks:
   - name: Ansible create file if it doesn't exist example
     file:
-      shell: touch /home/centos/test.file
+      shell: mkdir /home/centos/TEST
