@@ -1,5 +1,4 @@
 - hosts: all
   tasks:
   - name: Ansible create file if it doesn't exist example
-    file:
-      shell: mkdir /home/centos/TEST
+    shell: mkdir /home/centos/TEST
