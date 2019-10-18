@@ -1,2 +1,2 @@
 # Ansible_EC2
-![](/images/folder_struct.png)
+<img src"/images/folder_struct.png" width=20>
